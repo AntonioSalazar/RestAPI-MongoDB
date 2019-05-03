@@ -1,9 +1,23 @@
 const Employees = require('../models/employees');
 
 function listAllEmployees (req, res) {
-    Employees.find()
-    .then(employees => res.status(200).json(employees))
-    .catch(err => res.status(500).json(err))
+    const {orderBy} = req.query;
+    if(orderBy){
+        const regex = /(.*)(:)(ASC|DESC)/ig;
+        if (regex.test(orderBy)) {
+            let [column, order] = orderBy.split(':');
+            (/ASC/i).test(order) ? order = 1 : order = -1;
+            Employees.find().sort({[column]: order})
+                .then(employees => res.status(200).json(employees))
+                .catch(err => res.status(500).json(err))      
+        } else {
+            return res.status(400).json('If using a filter please use [field]: ASC|DESC')
+        }
+    } else {
+        Employees.find()
+        .then(employees => res.status(200).json(employees))
+        .catch(err => res.status(500).json(err))        
+    }
 }
 
 function listOneEmployee(req, res) {
