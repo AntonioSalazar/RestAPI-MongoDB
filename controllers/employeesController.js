@@ -28,16 +28,24 @@ function createEmployee(req, res) {
 }
 
 function updateEmployee(req, res) {
+    const employee = req.body;
     const employeeID = req.params.id;
-    Employees.findOneAndUpdate({'_id': employeeID}, req.body, { new: true})
+    if (employee && employeeID) {
+         Employees.findOneAndUpdate({'_id': employeeID}, {$set: employee}, { new: true})
         .then(updatedEmployee => {
             res.status(200).json(updatedEmployee)
         })
-        .catch(err => res.satus(400).json(err));
+        .catch(err => res.satus(400).json(err));   
+    } else {
+        return res.status(403).json('Specify data to modify')
+    }
 }
 
 function deleteEmployee(req, res) {
-
+    const employeeID = req.params.id;
+    Employees.deleteOne({'_id': employeeID})
+        .then(deletedEmployee => res.status(201).json(`Employee with the ID ${employeeID} has been deleted`))
+        .catch(err => res.status(400).json(err));
 }
 
 module.exports = {
