@@ -3,14 +3,20 @@ const Employees = require('../models/employees');
 function listAllEmployees (req, res) {
     Employees.find()
     .then(employees => res.status(200).json(employees))
-    .catch(err => res.status(404).json(err))
+    .catch(err => res.status(500).json(err))
 }
 
 function listOneEmployee(req, res) {
     const {ObjectID} = req;
     Employees.findOne({'_id': ObjectID})
-        .then(singleEmployee => res.status(200).json(singleEmployee))
-        .catch(err => res.status(400).json(err))
+        .then(singleEmployee => {
+            if (singleEmployee) {
+                return res.status(200).json(singleEmployee)
+            } else {
+                return res.status(200).json(`Employe with the ID ${ObjectID} cannot be found`)
+            }
+        })
+        .catch(err => res.status(500).json(err))
 }
 
 function createEmployee(req, res) {
@@ -33,11 +39,15 @@ function updateEmployee(req, res) {
     if (employee && employeeID) {
          Employees.findOneAndUpdate({'_id': employeeID}, {$set: employee}, { new: true})
         .then(updatedEmployee => {
-            res.status(200).json(updatedEmployee)
+            if (updatedEmployee) {
+                return res.status(200).json(updatedEmployee)
+            } else {
+                return res.status(200).json(`Couldnt modify employee with ID ${employeeID}, ID specified didnt matched any employee ID`)
+            }
         })
-        .catch(err => res.satus(400).json(err));   
+        .catch(err => res.satus(500).json(err));   
     } else {
-        return res.status(403).json('Specify data to modify')
+        return res.status(400).json('Specify data to modify')
     }
 }
 
@@ -48,10 +58,13 @@ function deleteEmployee(req, res) {
         .catch(err => res.status(400).json(err));
 }
 
+
+
 module.exports = {
     listAllEmployees,
     listOneEmployee,
     createEmployee,
     updateEmployee,
-    deleteEmployee
+    deleteEmployee,
+    
 }

@@ -18,12 +18,7 @@ router.delete('/employees/:id', middlewares.convertToObjectID, routes.employees.
 //departments endpoints
 router.get('/departments', routes.departments.listAllDepartments);
 
-router.get('/departments/:id', middlewares.convertToObjectID, routes.departments.listOneDepartment);
+router.get('/departments/:deptName/employees', routes.departments.getDepartmentEmployees)
 
-router.post('/departments', routes.departments.createDepartment);
-
-router.patch('/departments/:id', middlewares.convertToObjectID, routes.departments.updateDepartment);
-
-router.delete('/departments/:id', middlewares.convertToObjectID, routes.departments.deleteDepartment);
 
 module.exports = router;
