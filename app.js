@@ -11,9 +11,9 @@ const path         = require('path');
 
 
 mongoose
-  .connect('mongodb://localhost/restapiprojectmongo', {useNewUrlParser: true})
-  .then(x => {
-    console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
+  .connect('mongodb://localhost/projectREST', {useNewUrlParser: true})
+  .then(client => {
+    console.log(`Connected to Mongo! Database name: "${client.connections[0].name}"`)
   })
   .catch(err => {
     console.error('Error connecting to mongo', err)
