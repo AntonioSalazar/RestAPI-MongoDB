@@ -7,7 +7,7 @@ const middlewares = require('../middlewares/middlewares');
 //employees endpoints
 router.get('/employees', routes.employees.listAllEmployees);
 
-router.get('/employees/:id',  middlewares.convertToObjectID, routes.employees.listOneEmployee);
+router.get('/employees/:id', middlewares.authenticate,  middlewares.convertToObjectID, routes.employees.listOneEmployee);
 
 router.post('/employees', routes.employees.createEmployee);
 
