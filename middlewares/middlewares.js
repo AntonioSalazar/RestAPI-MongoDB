@@ -1,6 +1,6 @@
 
 const ObjectID = require('mongodb').ObjectID;
-const jwt      = require('jsonwebtoken');
+const jwt      = require('jsonwebtoken'); 
 
 function convertToObjectID(req, res, next) {
     const {id} = req.params;

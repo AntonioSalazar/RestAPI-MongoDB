@@ -8,6 +8,16 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
+const { ApolloServer } = require('apollo-server-express');
+const schema = require('./schema');
+const resolvers = require('./resolvers');
+const server = new ApolloServer({
+  typeDefs: schema,
+  resolvers: resolvers,
+  context: ({ req }) => {
+    return { authHeader: req.headers.authorization }
+  }
+});
 
 
 mongoose
@@ -23,6 +33,7 @@ const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);
 
 const app = express();
+server.applyMiddleware({app});
 
 // Middleware Setup
 app.use(logger('dev'));
